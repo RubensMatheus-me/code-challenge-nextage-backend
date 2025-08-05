@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificação de Conta</title>
+</head>
+<body>
+<h2>Olá, <span th:text="${name}">usuário</span>!</h2>
+<p>Obrigado por se registrar. Para ativar sua conta, clique no botão abaixo:</p>
+<p>
+    <a th:href="${verificationUrl}" style="background-color:#28a745;color:white;padding:10px 20px;text-decoration:none;">Verificar Conta</a>
+</p>
+<p>Se você não se registrou, apenas ignore este e-mail.</p>
+</body>
+</html>

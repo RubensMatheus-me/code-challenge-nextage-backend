@@ -1,0 +1,34 @@
+package com.nextage.codeChallenge.models;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Data
+@Entity
+@Table(name = "verify_email")
+public class VerifyEmail {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    private String email;
+
+    private String token;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime expiresAt;
+
+    private boolean used;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
+
+}
