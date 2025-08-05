@@ -1,9 +1,11 @@
 package com.nextage.codeChallenge.controllers;
 
 import com.nextage.codeChallenge.dto.AuthResponseDTO;
+import com.nextage.codeChallenge.dto.ChangePasswordDTO;
 import com.nextage.codeChallenge.dto.LoginRequestDTO;
 import com.nextage.codeChallenge.dto.RegisterRequestDTO;
 import com.nextage.codeChallenge.services.AuthService;
+import com.nextage.codeChallenge.services.ForgotPasswordService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/auth")
 public class AuthController {
     private final AuthService authService;
+    private final ForgotPasswordService forgotPasswordService;
 
     @Operation(summary = "Registrar um novo usuário")
     @ApiResponses(value = {
@@ -38,5 +41,16 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<AuthResponseDTO> authenticate(@RequestBody @Valid LoginRequestDTO request) {
         return ResponseEntity.ok(authService.login(request));
+    }
+
+    @Operation(summary = "Trocar senha de um usuário")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Senha alterada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao alterar a senha do usuário")
+    })
+    @PostMapping("/change-password")
+    public ResponseEntity<String> changePasswordDTO(@RequestBody ChangePasswordDTO dto) {
+            String result = forgotPasswordService.changePassword(dto);
+            return ResponseEntity.ok(result);
     }
 }

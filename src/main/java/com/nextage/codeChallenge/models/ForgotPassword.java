@@ -1,9 +1,12 @@
 package com.nextage.codeChallenge.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 @Entity
+@Data
 @Table(name = "forgot_password")
 public class ForgotPassword {
     @Id
@@ -14,7 +17,7 @@ public class ForgotPassword {
     private String code;
 
     @Column(name = "tempo_expiracao", nullable = false)
-    private Date expirationTime;
+    private LocalDateTime expirationTime;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false, unique = true)

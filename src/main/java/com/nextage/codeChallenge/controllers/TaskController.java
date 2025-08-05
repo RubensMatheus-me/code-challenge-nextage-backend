@@ -49,10 +49,16 @@ public class TaskController {
         return ResponseEntity.ok(dtoPage);
     }
 
+    @Operation(summary = "Encontrar uma tarefa por id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tarefa encontrada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro ao encontrar Tarefa")
+    })
     @GetMapping("/{id}")
     public ResponseEntity<Task> getTaskById(@PathVariable("id") Long id) {
         return ResponseEntity.ok(taskService.getTaskById(id));
     }
+
     @Operation(summary = "Adicionar uma tarefa")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tarefa adicionada com sucesso"),
@@ -91,7 +97,6 @@ public class TaskController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete (@PathVariable("id") Long id) {
         taskService.delete(id);
-
         return ResponseEntity.noContent().build();
     }
 

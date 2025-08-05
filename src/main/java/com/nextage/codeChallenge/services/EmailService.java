@@ -1,17 +1,16 @@
 package com.nextage.codeChallenge.services;
 
-import com.nextage.codeChallenge.dto.EmailVerificationDTO;
+import com.nextage.codeChallenge.models.ForgotPassword;
 import com.nextage.codeChallenge.models.VerifyEmail;
+import com.nextage.codeChallenge.repositories.ForgotPasswordRepository;
 import com.nextage.codeChallenge.repositories.UserRepository;
 import com.nextage.codeChallenge.repositories.VerifyEmailRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 
-import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -28,6 +27,8 @@ public class EmailService {
     private final TemplateEngine templateEngine;
     private final VerifyEmailRepository verifyEmailRepository;
     private final UserRepository userRepository;
+    private final ForgotPasswordService forgotPasswordService;
+    private final ForgotPasswordRepository forgotPasswordRepository;
 
     @Value("${app.base-email-url}")
     private String baseEmailUrl;
@@ -68,8 +69,49 @@ public class EmailService {
         }
     }
 
-    public void sendForgotPasswordEmail(EmailVerificationDTO dto) {
+    public void sendForgotPasswordEmail(String email) {
+        var user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Usuário não encontrado para o email informado"));
+        var code = forgotPasswordService.generateCode();
 
+        var existFp = forgotPasswordRepository.findByUserEmail(email);
+
+        ForgotPassword fp;
+
+        if(existFp.isPresent()) {
+            fp = existFp.get();
+
+            fp.setCode(code);
+            fp.setUser(user);
+            fp.setExpirationTime(LocalDateTime.now().plusMinutes(15));
+
+        } else {
+            fp = new ForgotPassword();
+
+            fp.setCode(code);
+            fp.setUser(user);
+            fp.setExpirationTime(LocalDateTime.now().plusMinutes(15));
+        }
+
+        forgotPasswordRepository.save(fp);
+
+        try {
+            MimeMessage message = javaMailSender.createMimeMessage();
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+
+            helper.setTo(email);
+            helper.setSubject("Recuperação de senha");
+
+            Context context = new Context();
+            context.setVariable("code", code);
+            context.setVariable("year", LocalDateTime.now().getYear());
+
+            String htmlContent = templateEngine.process("forgot-password-email", context);
+            helper.setText(htmlContent, true);
+
+            javaMailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException("Falha ao enviar e-mail de recuperação de senha", e);
+        }
     }
 
     public void verifyEmailToken(String token) {
