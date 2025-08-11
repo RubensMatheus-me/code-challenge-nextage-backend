@@ -2,6 +2,7 @@ package com.nextage.code.challenge.controllers;
 
 import com.nextage.code.challenge.dto.TaskRequestDTO;
 import com.nextage.code.challenge.dto.TaskResponseDTO;
+import com.nextage.code.challenge.dto.TaskStatusUpdateDTO;
 import com.nextage.code.challenge.enums.EStatus;
 import com.nextage.code.challenge.mappers.TaskMapper;
 import com.nextage.code.challenge.models.Task;
@@ -86,9 +87,8 @@ public class TaskController {
             @ApiResponse(responseCode = "400", description = "Erro ao alterar status de uma Tarefa")
     })
     @PatchMapping("/{id}/status")
-    public ResponseEntity<TaskResponseDTO> updateStatus(@PathVariable long id, @RequestBody TaskRequestDTO task) {
-        task.setId(id);
-        return ResponseEntity.ok(taskService.updateTaskStatus(task));
+    public ResponseEntity<TaskResponseDTO> updateStatus(@PathVariable long id, @RequestBody TaskStatusUpdateDTO dto) {
+        return ResponseEntity.ok(taskService.updateTaskStatus(id, dto));
     }
 
     @Operation(summary = "Apagar uma tarefa")

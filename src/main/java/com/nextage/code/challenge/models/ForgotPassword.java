@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Table(name = "forgot_password")
 public class ForgotPassword {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "codigo", nullable = false)

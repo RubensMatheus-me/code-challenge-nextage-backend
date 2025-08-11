@@ -2,6 +2,7 @@ package com.nextage.code.challenge.services;
 
 import com.nextage.code.challenge.dto.TaskRequestDTO;
 import com.nextage.code.challenge.dto.TaskResponseDTO;
+import com.nextage.code.challenge.dto.TaskStatusUpdateDTO;
 import com.nextage.code.challenge.enums.EStatus;
 import com.nextage.code.challenge.mappers.TaskMapper;
 import com.nextage.code.challenge.models.Task;
@@ -73,8 +74,13 @@ public class TaskService {
         return taskMapper.toResponse(updated);
     }
 
-    public TaskResponseDTO updateTaskStatus(TaskRequestDTO request) {
-        var task = taskRepository.findById(request.getId()).orElseThrow(() -> new RuntimeException("Tarefa com id: " + request.getId() + " não encontrado"));
+    public TaskResponseDTO updateTaskStatus(Long id, TaskStatusUpdateDTO dto) {
+
+        TaskRequestDTO taskResquestDTO = new TaskRequestDTO();
+        taskResquestDTO.setId(id);
+        taskResquestDTO.setStatus(dto.getStatus());
+
+        var task = taskRepository.findById(taskResquestDTO.getId()).orElseThrow(() -> new RuntimeException("Tarefa com id: " + taskResquestDTO.getId() + " não encontrado"));
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -82,7 +88,7 @@ public class TaskService {
             throw new AccessDeniedException("Você não tem permissão para modificar essa tarefa");
         }
 
-        task.setStatus(request.getStatus());
+        task.setStatus(taskResquestDTO.getStatus());
 
         Task updatedStatus = taskRepository.save(task);
 
