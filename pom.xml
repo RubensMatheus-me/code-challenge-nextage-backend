@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.nextage</groupId>
-	<artifactId>codeChallenge</artifactId>
+	<artifactId>code-challenge-nextage-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>codeChallenge</name>
 	<description>Desafio de Seleção para Estágio Nextage</description>
