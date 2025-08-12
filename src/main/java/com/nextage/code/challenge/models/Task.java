@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import org.hibernate.annotations.CreationTimestamp;
 
 
 import java.time.LocalDateTime;
@@ -28,9 +29,14 @@ public class Task {
     @Column(name = "status")
     private EStatus status;
 
-    @Column(name = "data_criacao")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "data_tarefa_criacao", updatable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "data_tarefa_inicio")
+    private LocalDateTime initiateTask;
+
+    @Column(name = "data_tarefa_fim")
+    private LocalDateTime endTask;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)

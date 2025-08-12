@@ -48,8 +48,10 @@ public class TaskService {
         var task = new Task();
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
-        task.setStatus(EStatus.PENDENTE);
+        task.setStatus(request.getStatus() != null ? request.getStatus() : EStatus.PENDENTE );
         task.setCreatedAt(LocalDateTime.now());
+        task.setInitiateTask(request.getInitiateTask());
+        task.setEndTask(request.getEndTask());
         task.setUser(user);
 
         taskRepository.save(task);
@@ -66,8 +68,11 @@ public class TaskService {
             throw new AccessDeniedException("Você não tem permissão para atualizar essa tarefa");
         }
 
+
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
+        task.setInitiateTask(request.getInitiateTask());
+        task.setEndTask(request.getEndTask());
 
         Task updated = taskRepository.save(task);
 
@@ -76,11 +81,8 @@ public class TaskService {
 
     public TaskResponseDTO updateTaskStatus(Long id, TaskStatusUpdateDTO dto) {
 
-        TaskRequestDTO taskResquestDTO = new TaskRequestDTO();
-        taskResquestDTO.setId(id);
-        taskResquestDTO.setStatus(dto.getStatus());
-
-        var task = taskRepository.findById(taskResquestDTO.getId()).orElseThrow(() -> new RuntimeException("Tarefa com id: " + taskResquestDTO.getId() + " não encontrado"));
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Tarefa com id: " + id + " não encontrado"));
 
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
 
@@ -88,12 +90,19 @@ public class TaskService {
             throw new AccessDeniedException("Você não tem permissão para modificar essa tarefa");
         }
 
-        task.setStatus(taskResquestDTO.getStatus());
+        if (dto.getStatus() == EStatus.EM_PROGRESSO && task.getInitiateTask() == null) {
+            task.setInitiateTask(LocalDateTime.now());
+        } else if (dto.getStatus() == EStatus.CONCLUIDA && task.getEndTask() == null) {
+            task.setEndTask(LocalDateTime.now());
+        }
+
+        task.setStatus(dto.getStatus());
 
         Task updatedStatus = taskRepository.save(task);
 
         return taskMapper.toResponse(updatedStatus);
     }
+
 
 
     public void delete(Long taskId) {
