@@ -2,6 +2,7 @@ package com.nextage.code.challenge.models;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -30,6 +31,7 @@ public class User implements UserDetails {
     private Boolean active;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private List<Task> tasks;
 
     @Override

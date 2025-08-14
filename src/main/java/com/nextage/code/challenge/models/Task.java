@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.ToString;
 
 
 import java.time.LocalDateTime;
@@ -40,6 +40,7 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
     private User user;
 
     @PrePersist

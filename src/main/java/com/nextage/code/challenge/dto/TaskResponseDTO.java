@@ -15,4 +15,5 @@ public class TaskResponseDTO {
     private LocalDateTime createdAt;
     private LocalDateTime initiateTask;
     private LocalDateTime endTask;
+    private Long userId;
 }
