@@ -34,3 +34,5 @@ ORM: Spring Data JPA / Hibernate
 Gerenciamento de Dependências: Maven
 
 Outras: Lombok e Validation API
+
+**Frontend**: React (Next.js) - disponível em:  👉 [Repositório do Frontend](https://github.com/RubensMatheus-me/code-challenge-nextage-frontend)
