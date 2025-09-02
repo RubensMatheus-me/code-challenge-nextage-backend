@@ -19,7 +19,6 @@ Foi desenvolvido com Spring Boot e tem como objetivo fornecer serviços de auten
 - [x] Edição de Tarefas
 - [x] Exclusão de Tarefas
 - [x] Filtros e Ordenação de Tarefas 
-- [x] Criação de tarefas
 
 ## Tecnologias Utilizadas
 
@@ -35,4 +34,5 @@ Gerenciamento de Dependências: Maven
 
 Outras: Lombok e Validation API
 
-**Frontend**: React (Next.js) - disponível em:  👉 [Repositório do Frontend](https://github.com/RubensMatheus-me/code-challenge-nextage-frontend)
+**Frontend**: React - disponível em:  👉 [Repositório do Frontend](https://github.com/RubensMatheus-me/code-challenge-nextage-frontend)
+
